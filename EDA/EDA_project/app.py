@@ -3,22 +3,22 @@ import pandas as pd
 import seaborn as sns 
 import matplotlib.pyplot as plt
 
-#load titanic data set
+# Load Titanic dataset
 @st.cache_data
 def load_data():
     data = pd.read_csv(r"C:\Users\ky321\OneDrive\Desktop\Data science and Ai\EDA\EDA_project\titanic dataset.csv")
     return data
 
-data =load_data()
+data = load_data()
 
-# title and description
-st.title("Exploratory data analysis of titanic dataset")
+# Title and description
+st.title("Exploratory Data Analysis of Titanic Dataset")
 st.write("This is an exploratory data analysis of the Titanic dataset.")
-st.write("first few rows of the dataset:")
+st.write("First few rows of the dataset:")
 st.dataframe(data.head())
 
-# data cleaning section
-st.subheader("missing  values")
+# Data Cleaning Section
+st.subheader("Missing Values")
 missing_data = data.isnull().sum()
 st.write(missing_data)
 
@@ -59,14 +59,20 @@ sns.countplot(x='Pclass', hue='Survived', data=data, ax=ax)
 ax.set_title('Pclass vs Survived')
 st.pyplot(fig)
 
-# '''
-# # Correlation Heatmap
-# st.subheader('Correlation Heatmap')
-# fig, ax = plt.subplots()
-# sns.heatmap(data.corr(), annot=True, cmap='coolwarm', ax=ax)
-# ax.set_title('Correlation Heatmap')
-# st.pyplot(fig)
-# '''
+# Survival Count
+st.subheader('Survival Count')
+fig, ax = plt.subplots()
+sns.countplot(x="Survived", data=data, palette="pastel", ax=ax)
+ax.set_xticklabels(["Did Not Survive", "Survived"])
+ax.set_title("Survival Count on Titanic")
+st.pyplot(fig)
+
+# Gender-based Survival Rate
+st.subheader('Survival Count by Gender')
+fig, ax = plt.subplots()
+sns.countplot(x="Sex", hue="Survived", data=data, palette="Set2", ax=ax)
+ax.set_title("Survival Count by Gender")
+st.pyplot(fig)
 
 # Feature Engineering Section
 st.subheader('Feature Engineering: Family Size')
@@ -76,11 +82,20 @@ sns.histplot(data['FamilySize'], kde=True, ax=ax)
 ax.set_title('Family Size Distribution')
 st.pyplot(fig)
 
+# Correlation Heatmap
+st.subheader('Feature Correlation Heatmap')
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.heatmap(data.corr(numeric_only=True), annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5, ax=ax)
+ax.set_title("Correlation Heatmap of Titanic Features")
+st.pyplot(fig)
+
 # Conclusion Section
 st.subheader('Key Insights')
 insights = """
 - Females have a higher survival rate than males.
 - Passengers in 1st class had the highest survival rate.
 - The majority of passengers are in Pclass 3.
-- Younger passengers tended to survive more often."""
+- Younger passengers tended to survive more often.
+- Fare and Class were strong survival indicators, showing that socioeconomic status influenced survival chances.
+"""
 st.write(insights)
